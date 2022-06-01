@@ -1,0 +1,1 @@
+# skattar_sveitarfelaga
