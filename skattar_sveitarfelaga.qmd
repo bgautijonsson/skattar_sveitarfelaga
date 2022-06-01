@@ -1,0 +1,73 @@
+---
+title: "skattar_sveitarfelaga"
+format: html
+editor: visual
+---
+
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggthemes)
+library(scales)
+library(cowplot)
+```
+
+```{r}
+d <- read_excel("tafla_xx_fasteignagjold_2020.xlsx", skip = 5) |> 
+    slice(-1) |> 
+    set_names(c("nr", "sveitarfelag", "utsvar", "fskattur_a", "fskattur_b", "fskattur_c", "fraveitugjald", "vatnsgjald", "sorphreinsunargjald",
+                "sorpeydingargjald", "lodaleiga_ibudir", "lodaleiga_fyrirtaeki", "fj_gjd")) |> 
+    select(sveitarfelag:fskattur_c) |> 
+    mutate(sveitarfelag = str_replace_all(sveitarfelag, "[0-9]+\\)", "") |> 
+               str_replace_all("1 \\)", "") |> 
+               str_squish()) |> 
+    drop_na() |> 
+    mutate_at(vars(contains("fskattur")), ~ . / 100)
+```
+
+# Fasteignaskattur
+
+## A-skattur
+
+```{r, fig.width = 12, fig.asp = 0.5}
+p <- d |> 
+    mutate(sveitarfelag = fct_reorder(sveitarfelag, fskattur_a)) |> 
+    ggplot(aes(fskattur_a, sveitarfelag)) + 
+    geom_segment(aes(yend = sveitarfelag, xend = 0), alpha = 0.3) +
+    geom_point() +
+    scale_x_continuous(labels = label_percent(),
+                       limits = c(0, 0.0063), expand = expansion()) +
+    theme_half_open(font_size = 10) +
+    labs(x = NULL, y = NULL,
+         title = "Fasteignaskattur (A-skattur) hjá sveitarfélögum á Íslandi",
+         subtitle = "A-skattur er lagður á íbúðarhúsnæði og getur verið allt að 0,625% af fasteignamati.")
+
+
+ggsave(plot = p, filename = "fastskattur_a.png",
+       width = 8, height = 0.6 * 8, scale = 1.5, bg = "white")
+```
+
+
+
+
+## C-skattur
+
+```{r, fig.width = 12, fig.asp = 0.5}
+p <- d |> 
+    mutate(sveitarfelag = fct_reorder(sveitarfelag, fskattur_c)) |> 
+    ggplot(aes(fskattur_c, sveitarfelag)) + 
+    geom_segment(aes(yend = sveitarfelag, xend = 0), alpha = 0.3) +
+    geom_point() +
+    scale_x_continuous(labels = label_percent(),
+                       limits = c(0, 0.0205), expand = expansion()) +
+    theme_half_open(font_size = 10) +
+    labs(x = NULL, y = NULL,
+         title = "Fasteignaskattur (C-skattur) hjá sveitarfélögum á Íslandi",
+         subtitle = "C-skattur er lagður á atvinnuhúsnæði og annað húsnæði sem ekki fellur undir A- eða B-skatt og getur verið allt að 1,65% af fasteignamati.")
+
+
+ggsave(plot = p, filename = "fastskattur_c.png",
+       width = 8, height = 0.6 * 8, scale = 1.5, bg = "white")
+```
+
