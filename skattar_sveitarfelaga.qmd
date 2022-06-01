@@ -41,7 +41,8 @@ p <- d |>
     theme_half_open(font_size = 10) +
     labs(x = NULL, y = NULL,
          title = "Fasteignaskattur (A-skattur) hjá sveitarfélögum á Íslandi",
-         subtitle = "A-skattur er lagður á íbúðarhúsnæði og getur verið allt að 0,625% af fasteignamati.")
+         subtitle = "A-skattur er lagður á íbúðarhúsnæði og getur verið allt að 0,625% af fasteignamati.",
+         caption = "Kóði og gögn: https://github.com/bgautijonsson/skattar_sveitarfelaga.git")
 
 
 ggsave(plot = p, filename = "fastskattur_a.png",
@@ -64,7 +65,8 @@ p <- d |>
     theme_half_open(font_size = 10) +
     labs(x = NULL, y = NULL,
          title = "Fasteignaskattur (C-skattur) hjá sveitarfélögum á Íslandi",
-         subtitle = "C-skattur er lagður á atvinnuhúsnæði og annað húsnæði sem ekki fellur undir A- eða B-skatt og getur verið allt að 1,65% af fasteignamati.")
+         subtitle = "C-skattur er lagður á atvinnuhúsnæði og annað húsnæði sem ekki fellur undir A- eða B-skatt og getur verið allt að 1,65% af fasteignamati.",
+         caption = "https://github.com/bgautijonsson/skattar_sveitarfelaga.git")
 
 
 ggsave(plot = p, filename = "fastskattur_c.png",
